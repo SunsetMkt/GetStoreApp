@@ -2,12 +2,12 @@
 using System.ComponentModel;
 using Windows.ApplicationModel;
 
-namespace GetStoreApp.Models.Controls.UWPApp
+namespace GetStoreApp.Models.Controls.AppManager
 {
     /// <summary>
     /// 应用管理数据模型
     /// </summary>
-    public partial class PackageModel : INotifyPropertyChanged
+    public sealed partial class PackageModel : INotifyPropertyChanged
     {
         /// <summary>
         /// 是否为框架包
