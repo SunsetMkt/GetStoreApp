@@ -42,8 +42,7 @@ namespace GetStoreApp.WindowsAPI.ComTypes
 
             FileOpenDialog.SetOptions(FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS);
             FileOpenDialog.SetTitle(Description);
-            Guid iShellItemGuid = typeof(IShellItem).GUID;
-            Shell32Library.SHCreateItemFromParsingName(RootFolder, IntPtr.Zero, ref iShellItemGuid, out IntPtr initialFolder);
+            Shell32Library.SHCreateItemFromParsingName(RootFolder, IntPtr.Zero, typeof(IShellItem).GUID, out IntPtr initialFolder);
             FileOpenDialog.SetFolder(ComInterfaceMarshaller<IShellItem>.ConvertToManaged((void*)initialFolder));
         }
 
@@ -69,8 +68,8 @@ namespace GetStoreApp.WindowsAPI.ComTypes
                     }
 
                     FileOpenDialog.GetResult(out IShellItem pItem);
-                    pItem.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, out IntPtr pszString);
-                    SelectedPath = Marshal.PtrToStringUni(pszString);
+                    pItem.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, out string pszString);
+                    SelectedPath = pszString;
                     return true;
                 }
                 else

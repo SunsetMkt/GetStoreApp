@@ -486,4 +486,34 @@
   <data name="ShellMenuOffContent" xml:space="preserve">
     <value>Hide</value>
   </data>
+  <data name="DownloadWebView2" xml:space="preserve">
+    <value>Download WebView2</value>
+  </data>
+  <data name="UseSystemRegionOffContent" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="UseSystemRegionOnContent" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="UseSystemRegion" xml:space="preserve">
+    <value>Use system country or region value</value>
+  </data>
+  <data name="CurrentCountryOrRegion" xml:space="preserve">
+    <value>Current country or region: </value>
+  </data>
+  <data name="StoreCountryOrRegion" xml:space="preserve">
+    <value>Country or region</value>
+  </data>
+  <data name="StoreCountryOrRegionDescription" xml:space="preserve">
+    <value>Set Microsoft Store countries and regions</value>
+  </data>
+  <data name="SystemRegionSettings" xml:space="preserve">
+    <value>System region settings</value>
+  </data>
+  <data name="StoreRegion" xml:space="preserve">
+    <value>Store region</value>
+  </data>
+  <data name="StoreRegionDescription" xml:space="preserve">
+    <value>Set the Microsoft Store market area</value>
+  </data>
 </root>

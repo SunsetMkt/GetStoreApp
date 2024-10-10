@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation.Diagnostics;
@@ -151,7 +152,7 @@ namespace GetStoreApp.UI.Controls.WinGet
 
                         InstallOptions installOptions = WinGetService.CreateInstallOptions();
 
-                        installOptions.PackageInstallMode = Enum.TryParse(WinGetConfigService.WinGetInstallMode.Value.ToString(), out PackageInstallMode packageInstallMode) ? packageInstallMode : PackageInstallMode.Default;
+                        installOptions.PackageInstallMode = Enum.TryParse(WinGetConfigService.WinGetInstallMode.Key, out PackageInstallMode packageInstallMode) ? packageInstallMode : PackageInstallMode.Default;
                         installOptions.PackageInstallScope = PackageInstallScope.Any;
 
                         // 更新安装进度
@@ -273,7 +274,10 @@ namespace GetStoreApp.UI.Controls.WinGet
                         {
                             WinGetInstance.InstallingStateDict.Add(searchApps.AppID, installTokenSource);
                         }
-                        catch (Exception) { }
+                        catch (Exception e)
+                        {
+                            ExceptionAsVoidMarshaller.ConvertToUnmanaged(e);
+                        }
                         finally
                         {
                             WinGetInstance.installStateLock.Exit();
@@ -314,7 +318,10 @@ namespace GetStoreApp.UI.Controls.WinGet
                         {
                             WinGetInstance.InstallingStateDict.Remove(searchApps.AppID);
                         }
-                        catch (Exception) { }
+                        catch (Exception e)
+                        {
+                            ExceptionAsVoidMarshaller.ConvertToUnmanaged(e);
+                        }
                         finally
                         {
                             WinGetInstance.installStateLock.Exit();

@@ -35,8 +35,9 @@ namespace GetStoreAppShellExtension
                 ShellMenuClassFactory classFactory = new();
                 IntPtr pIUnknown = (IntPtr)ComInterfaceMarshaller<ShellMenuClassFactory>.ConvertToUnmanaged(classFactory);
 
-                int hresult = Marshal.QueryInterface(pIUnknown, in riid, out *ppv);
-                Marshal.Release(pIUnknown);
+                int hresult = StrategyBasedComWrappers.DefaultIUnknownStrategy.QueryInterface((void*)pIUnknown, in riid, out void* ppObj);
+                *ppv = (IntPtr)ppObj;
+                StrategyBasedComWrappers.DefaultIUnknownStrategy.Release((void*)pIUnknown);
 
                 return hresult;
             }

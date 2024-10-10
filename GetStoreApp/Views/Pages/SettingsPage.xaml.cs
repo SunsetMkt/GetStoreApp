@@ -15,7 +15,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,6 +22,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Diagnostics;
+using Windows.Globalization;
 using Windows.Management.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -45,9 +45,9 @@ namespace GetStoreApp.Views.Pages
 
         private bool IsDevVersionExisted { get; } = WinGetService.IsDevVersionExisted;
 
-        private DictionaryEntry _theme = ThemeService.AppTheme;
+        private KeyValuePair<string, string> _theme = ThemeService.AppTheme;
 
-        public DictionaryEntry Theme
+        public KeyValuePair<string, string> Theme
         {
             get { return _theme; }
 
@@ -61,9 +61,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _backdrop = BackdropService.AppBackdrop;
+        private KeyValuePair<string, string> _backdrop = BackdropService.AppBackdrop;
 
-        public DictionaryEntry Backdrop
+        public KeyValuePair<string, string> Backdrop
         {
             get { return _backdrop; }
 
@@ -93,9 +93,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _appLanguage;
+        private KeyValuePair<string, string> _appLanguage;
 
-        public DictionaryEntry AppLanguage
+        public KeyValuePair<string, string> AppLanguage
         {
             get { return _appLanguage; }
 
@@ -141,9 +141,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _webKernelItem = WebKernelService.WebKernel;
+        private KeyValuePair<string, string> _webKernelItem = WebKernelService.WebKernel;
 
-        public DictionaryEntry WebKernelItem
+        public KeyValuePair<string, string> WebKernelItem
         {
             get { return _webKernelItem; }
 
@@ -157,9 +157,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _queryLinksModeItem = QueryLinksModeService.QueryLinksMode;
+        private KeyValuePair<string, string> _queryLinksModeItem = QueryLinksModeService.QueryLinksMode;
 
-        public DictionaryEntry QueryLinksModeItem
+        public KeyValuePair<string, string> QueryLinksModeItem
         {
             get { return _queryLinksModeItem; }
 
@@ -185,6 +185,54 @@ namespace GetStoreApp.Views.Pages
                 {
                     _shellMenuValue = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShellMenuValue)));
+                }
+            }
+        }
+
+        private bool _useSystemRegionValue = StoreRegionService.UseSystemRegionValue;
+
+        public bool UseSystemRegionValue
+        {
+            get { return _useSystemRegionValue; }
+
+            set
+            {
+                if (!Equals(_useSystemRegionValue, value))
+                {
+                    _useSystemRegionValue = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UseSystemRegionValue)));
+                }
+            }
+        }
+
+        private GeographicRegion _currentCountryOrRegion = StoreRegionService.DefaultStoreRegion;
+
+        public GeographicRegion CurrentCountryOrRegion
+        {
+            get { return _currentCountryOrRegion; }
+
+            set
+            {
+                if (!Equals(_currentCountryOrRegion, value))
+                {
+                    _currentCountryOrRegion = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentCountryOrRegion)));
+                }
+            }
+        }
+
+        private GeographicRegion _storeRegion;
+
+        public GeographicRegion StoreRegion
+        {
+            get { return _storeRegion; }
+
+            set
+            {
+                if (!Equals(_storeRegion, value))
+                {
+                    _storeRegion = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StoreRegion)));
                 }
             }
         }
@@ -237,9 +285,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _winGetInstallMode = WinGetConfigService.WinGetInstallMode;
+        private KeyValuePair<string, string> _winGetInstallMode = WinGetConfigService.WinGetInstallMode;
 
-        public DictionaryEntry WinGetInstallMode
+        public KeyValuePair<string, string> WinGetInstallMode
         {
             get { return _winGetInstallMode; }
 
@@ -269,9 +317,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _doEngineMode = DownloadOptionsService.DoEngineMode;
+        private KeyValuePair<string, string> _doEngineMode = DownloadOptionsService.DoEngineMode;
 
-        public DictionaryEntry DoEngineMode
+        public KeyValuePair<string, string> DoEngineMode
         {
             get { return _doEngineMode; }
 
@@ -285,9 +333,9 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private DictionaryEntry _installMode = InstallModeService.InstallMode;
+        private KeyValuePair<string, string> _installMode = InstallModeService.InstallMode;
 
-        public DictionaryEntry InstallMode
+        public KeyValuePair<string, string> InstallMode
         {
             get { return _installMode; }
 
@@ -301,21 +349,23 @@ namespace GetStoreApp.Views.Pages
             }
         }
 
-        private List<DictionaryEntry> ThemeList { get; } = ThemeService.ThemeList;
+        private List<KeyValuePair<string, string>> ThemeList { get; } = ThemeService.ThemeList;
 
-        private List<DictionaryEntry> BackdropList { get; } = BackdropService.BackdropList;
+        private List<KeyValuePair<string, string>> BackdropList { get; } = BackdropService.BackdropList;
 
-        private List<DictionaryEntry> WebKernelList { get; } = WebKernelService.WebKernelList;
+        private List<KeyValuePair<string, string>> WebKernelList { get; } = WebKernelService.WebKernelList;
 
-        private List<DictionaryEntry> QueryLinksModeList { get; } = QueryLinksModeService.QueryLinksModeList;
+        private List<KeyValuePair<string, string>> QueryLinksModeList { get; } = QueryLinksModeService.QueryLinksModeList;
 
-        private List<DictionaryEntry> WinGetInstallModeList { get; } = WinGetConfigService.WinGetInstallModeList;
+        private List<KeyValuePair<string, string>> WinGetInstallModeList { get; } = WinGetConfigService.WinGetInstallModeList;
 
-        private List<DictionaryEntry> DoEngineModeList { get; } = DownloadOptionsService.DoEngineModeList;
+        private List<KeyValuePair<string, string>> DoEngineModeList { get; } = DownloadOptionsService.DoEngineModeList;
 
-        private List<DictionaryEntry> InstallModeList { get; } = InstallModeService.InstallModeList;
+        private List<KeyValuePair<string, string>> InstallModeList { get; } = InstallModeService.InstallModeList;
 
         private ObservableCollection<LanguageModel> LanguageCollection { get; } = [];
+
+        private ObservableCollection<StoreRegionModel> StoreRegionCollection { get; } = [];
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -323,9 +373,9 @@ namespace GetStoreApp.Views.Pages
         {
             InitializeComponent();
 
-            foreach (DictionaryEntry languageItem in LanguageService.LanguageList)
+            foreach (KeyValuePair<string, string> languageItem in LanguageService.LanguageList)
             {
-                if (LanguageService.AppLanguage.Value.Equals(languageItem.Value))
+                if (LanguageService.AppLanguage.Key.Equals(languageItem.Key))
                 {
                     AppLanguage = languageItem;
                     LanguageCollection.Add(new LanguageModel()
@@ -343,6 +393,30 @@ namespace GetStoreApp.Views.Pages
                     });
                 }
             }
+
+            foreach (GeographicRegion geographicItem in StoreRegionService.StoreRegionList)
+            {
+                if (StoreRegionService.StoreRegion.CodeTwoLetter.Equals(geographicItem.CodeTwoLetter))
+                {
+                    StoreRegion = geographicItem;
+                    StoreRegionCollection.Add(new StoreRegionModel()
+                    {
+                        StoreRegionInfo = geographicItem,
+                        IsChecked = true
+                    });
+                }
+                else
+                {
+                    StoreRegionCollection.Add(new StoreRegionModel()
+                    {
+                        StoreRegionInfo = geographicItem,
+                        IsChecked = false
+                    });
+                }
+            }
+
+            GlobalNotificationService.ApplicationExit += OnApplicationExit;
+            StoreRegionService.ServiceChanged += OnServiceChanged;
         }
 
         #region 第一部分：重写父类事件
@@ -375,7 +449,7 @@ namespace GetStoreApp.Views.Pages
                 foreach (LanguageModel item in LanguageCollection)
                 {
                     item.IsChecked = false;
-                    if (languageItem.LangaugeInfo.Value.Equals(item.LangaugeInfo.Value))
+                    if (languageItem.LangaugeInfo.Key.Equals(item.LangaugeInfo.Key))
                     {
                         AppLanguage = item.LangaugeInfo;
                         item.IsChecked = true;
@@ -384,6 +458,32 @@ namespace GetStoreApp.Views.Pages
 
                 LanguageService.SetLanguage(AppLanguage);
                 await TeachingTipHelper.ShowAsync(new OperationResultTip(OperationKind.LanguageChange));
+            }
+        }
+
+        /// <summary>
+        /// 修改商店区域
+        /// </summary>
+        private void OnStoreRegionExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (StoreRegionFlyout.IsOpen)
+            {
+                StoreRegionFlyout.Hide();
+            }
+
+            if (args.Parameter is StoreRegionModel regionItem)
+            {
+                foreach (StoreRegionModel item in StoreRegionCollection)
+                {
+                    item.IsChecked = false;
+                    if (regionItem.StoreRegionInfo.CodeTwoLetter.Equals(item.StoreRegionInfo.CodeTwoLetter))
+                    {
+                        StoreRegion = item.StoreRegionInfo;
+                        item.IsChecked = true;
+                    }
+                }
+
+                StoreRegionService.SetRegion(StoreRegion);
             }
         }
 
@@ -742,7 +842,7 @@ namespace GetStoreApp.Views.Pages
         /// <summary>
         /// 语言设置菜单打开时自动定位到选中项
         /// </summary>
-        private void OnOpened(object sender, object args)
+        private void OnLanguageFlyoutOpened(object sender, object args)
         {
             foreach (LanguageModel languageItem in LanguageCollection)
             {
@@ -775,6 +875,57 @@ namespace GetStoreApp.Views.Pages
             {
                 NotificationService.SetNotification(toggleSwitch.IsOn);
                 Notification = toggleSwitch.IsOn;
+            }
+        }
+
+        /// <summary>
+        /// 打开系统区域设置
+        /// </summary>
+        private async void OnSystemRegionSettingsClicked(object sender, RoutedEventArgs args)
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-settings:regionformatting"));
+        }
+
+        /// <summary>
+        /// 设置是否使用系统默认区域
+        /// </summary>
+        private void OnUseSystemRegionToggled(object sender, RoutedEventArgs args)
+        {
+            if (sender is ToggleSwitch toggleSwitch)
+            {
+                StoreRegionService.SetUseSystemRegion(toggleSwitch.IsOn);
+                UseSystemRegionValue = toggleSwitch.IsOn;
+
+                if (UseSystemRegionValue)
+                {
+                    StoreRegion = StoreRegionService.DefaultStoreRegion;
+                    StoreRegionService.SetRegion(StoreRegion);
+
+                    foreach (StoreRegionModel item in StoreRegionCollection)
+                    {
+                        item.IsChecked = false;
+                        if (StoreRegion.CodeTwoLetter.Equals(item.StoreRegionInfo.CodeTwoLetter))
+                        {
+                            StoreRegion = item.StoreRegionInfo;
+                            item.IsChecked = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 区域设置菜单打开时自动定位到选中项
+        /// </summary>
+        private void OnStoreRegionFlyoutOpened(object sender, object args)
+        {
+            foreach (StoreRegionModel storeRegionItem in StoreRegionCollection)
+            {
+                if (storeRegionItem.IsChecked)
+                {
+                    StoreRegionListView.ScrollIntoView(storeRegionItem);
+                    break;
+                }
             }
         }
 
@@ -828,21 +979,70 @@ namespace GetStoreApp.Views.Pages
 
         #endregion 第三部分：设置页面——挂载的事件
 
-        private string LocalizeDisplayNumber(DictionaryEntry selectedBackdrop)
+        #region 第四部分：自定义事件
+
+        /// <summary>
+        /// 应用程序退出时触发的事件
+        /// </summary>
+        private void OnApplicationExit(object sender, EventArgs args)
         {
-            int index = BackdropList.FindIndex(item => item.Value.Equals(selectedBackdrop.Value));
+            try
+            {
+                GlobalNotificationService.ApplicationExit -= OnApplicationExit;
+                StoreRegionService.ServiceChanged -= OnServiceChanged;
+            }
+            catch (Exception e)
+            {
+                LogService.WriteLog(LoggingLevel.Error, "Unregister store region service event failed", e);
+            }
+        }
+
+        /// <summary>
+        /// 设置选项发生变化时触发的事件
+        /// </summary>
+        private void OnServiceChanged(object sender, EventArgs args)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!CurrentCountryOrRegion.CodeTwoLetter.Equals(StoreRegionService.DefaultStoreRegion.CodeTwoLetter))
+                {
+                    CurrentCountryOrRegion = StoreRegionService.DefaultStoreRegion;
+                }
+
+                if (UseSystemRegionValue)
+                {
+                    StoreRegion = StoreRegionService.DefaultStoreRegion;
+
+                    foreach (StoreRegionModel item in StoreRegionCollection)
+                    {
+                        item.IsChecked = false;
+                        if (StoreRegion.CodeTwoLetter.Equals(item.StoreRegionInfo.CodeTwoLetter))
+                        {
+                            StoreRegion = item.StoreRegionInfo;
+                            item.IsChecked = true;
+                        }
+                    }
+                }
+            });
+        }
+
+        #endregion 第四部分：自定义事件
+
+        private string LocalizeDisplayNumber(KeyValuePair<string, string> selectedBackdrop)
+        {
+            int index = BackdropList.FindIndex(item => item.Key.Equals(selectedBackdrop.Key));
 
             if (index is 0)
             {
-                return selectedBackdrop.Key.ToString();
+                return selectedBackdrop.Value;
             }
             else if (index is 1 or 2)
             {
-                return ResourceService.GetLocalized("Settings/Mica") + " " + selectedBackdrop.Key.ToString();
+                return ResourceService.GetLocalized("Settings/Mica") + " " + selectedBackdrop.Value;
             }
             else if (index is 3 or 4 or 5)
             {
-                return ResourceService.GetLocalized("Settings/DesktopAcrylic") + " " + selectedBackdrop.Key.ToString();
+                return ResourceService.GetLocalized("Settings/DesktopAcrylic") + " " + selectedBackdrop.Value;
             }
             else
             {

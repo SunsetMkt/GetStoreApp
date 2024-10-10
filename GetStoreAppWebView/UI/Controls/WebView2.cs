@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Runtime.InteropServices.Marshalling;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Foundation;
@@ -1317,21 +1317,16 @@ namespace GetStoreAppWebView.UI.Controls
                             ;
                             delegWndProc = OnWndProc;
 
-                            byte[] classnameBytes = Encoding.Default.GetBytes(classname);
-                            IntPtr classnamePtr = Marshal.AllocHGlobal(classnameBytes.Length + 1);
-                            Marshal.Copy(classnameBytes, 0, classnamePtr, classnameBytes.Length);
-
-                            // Add null terminator
-                            Marshal.WriteByte(classnamePtr + classnameBytes.Length, 0);
-
-                            WNDCLASS wc = new()
+                            unsafe
                             {
-                                lpfnWndProc = Marshal.GetFunctionPointerForDelegate(delegWndProc),
-                                hInstance = hInstance,
-                                lpszClassName = classnamePtr,
-                            };
-                            User32Library.RegisterClass(ref wc);
-                            Marshal.FreeHGlobal(classnamePtr);
+                                WNDCLASS wc = new()
+                                {
+                                    lpfnWndProc = Marshal.GetFunctionPointerForDelegate(delegWndProc),
+                                    hInstance = hInstance,
+                                    lpszClassName = (IntPtr)Utf16StringMarshaller.ConvertToUnmanaged(classname),
+                                };
+                                User32Library.RegisterClass(wc);
+                            }
 
                             tempHostHwnd = User32Library.CreateWindowEx(0, classname, "WebView2 Temporary Parent", 0x00000000, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, hInstance, IntPtr.Zero);
                         }
